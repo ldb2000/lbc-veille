@@ -6,8 +6,6 @@ from datetime import datetime, timezone
 
 import lbc
 
-import departments
-
 
 def get_proxy_url(proxy_mode, brd_user, brd_pass):
     """URL proxy Bright Data, ou None si proxy désactivé."""
