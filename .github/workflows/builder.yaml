@@ -27,7 +27,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build & push ${{ matrix.arch }}
-        uses: home-assistant/builder@master
+        uses: home-assistant/builder@62a1597b84b3461abad9816d9cd92862a2b542c3  # 2026.03.2
         with:
           args: >-
             --${{ matrix.arch }}

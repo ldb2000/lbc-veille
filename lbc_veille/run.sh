@@ -1,6 +1,8 @@
 #!/usr/bin/with-contenv bashio
 set -e
 
+bashio::log.level "$(bashio::config 'log_level')"
+
 export SUPABASE_URL="$(bashio::config 'supabase_url')"
 export SUPABASE_SERVICE_KEY="$(bashio::config 'supabase_service_key')"
 export DEPARTEMENTS="$(bashio::config 'departements')"

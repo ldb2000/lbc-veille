@@ -1,5 +1,6 @@
 """Publication MQTT discovery + état pour Home Assistant."""
 import json
+import time
 
 import paho.mqtt.client as mqtt
 
@@ -83,10 +84,21 @@ class MqttPublisher:
         self.host = host
         self.port = int(port)
 
-    def connect(self):
-        self.client.connect(self.host, self.port, keepalive=60)
-        self.client.loop_start()
-        self.client.publish(AVAIL_TOPIC, "online", retain=True)
+    def connect(self, retries=10, backoff=5):
+        """Connexion au broker avec retries + backoff (le broker peut démarrer
+        après l'add-on). Lève la dernière exception si tous les essais échouent."""
+        last_exc = None
+        for attempt in range(1, retries + 1):
+            try:
+                self.client.connect(self.host, self.port, keepalive=60)
+                self.client.loop_start()
+                self.client.publish(AVAIL_TOPIC, "online", retain=True)
+                return
+            except OSError as exc:
+                last_exc = exc
+                print(f"[MQTT] connexion échouée (essai {attempt}/{retries}): {exc}")
+                time.sleep(backoff)
+        raise last_exc
 
     def publish_discovery(self):
         for sensor in SENSORS:
