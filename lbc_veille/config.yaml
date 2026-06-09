@@ -1,5 +1,5 @@
 name: "LBC Veille Motos"
-version: "0.1.1"
+version: "0.1.2"
 slug: "lbc_veille"
 description: "Scrape LeBonCoin motos et publie des compteurs via MQTT discovery"
 url: "https://github.com/ldb2000/lbc-veille"

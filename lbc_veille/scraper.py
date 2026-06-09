@@ -152,21 +152,30 @@ def run_scraper(sb, client, depts, pages=2, proxy_mode="sans"):
                     continue
 
                 if not results.ads:
+                    print(f"  Page {page}: 0 annonce, fin de la zone.")
                     break
 
-                for ad in results.ads:
+                nb = len(results.ads)
+                print(f"  Page {page}/{pages}: {nb} annonce(s)")
+                for idx, ad in enumerate(results.ads, 1):
                     do_visit = not (proxy_mode == "residential" and random.random() < 0.3)
+                    target = ad
                     if do_visit:
                         time.sleep(random.uniform(2, 6))
                         try:
-                            full_ad = client.get_ad(ad.id)
+                            target = client.get_ad(ad.id)
                         except Exception as exc:
                             stats["errors"] += 1
-                            print(f"  Erreur get_ad {ad.id}: {exc}")
+                            print(f"    [{idx}/{nb}] Erreur get_ad {ad.id}: {exc}")
                             continue
-                        upsert_annonce(sb, full_ad, stats)
-                    else:
-                        upsert_annonce(sb, ad, stats)
+                    upsert_annonce(sb, target, stats)
+                    titre = (getattr(target, "subject", None) or "?")[:45]
+                    prix = getattr(target, "price", "?")
+                    print(f"    [{idx}/{nb}] {titre} ({prix}EUR)")
+                print(
+                    f"  Cumul: +{stats['new']} new, {stats['updated']} maj, "
+                    f"{stats['price_drops']} baisses, {stats['errors']} err"
+                )
                 time.sleep(random.uniform(1, 5))
     except Exception as exc:
         stats["ok"] = False

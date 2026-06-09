@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.2
+
+- Logs en direct : nb d'annonces par page + chaque annonce (titre/prix) + cumul.
+
 ## 0.1.1
 
 - `pages` : plafond relevé de 10 à 50.
