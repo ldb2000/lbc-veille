@@ -5,7 +5,6 @@ description: "Scrape LeBonCoin motos et publie des compteurs via MQTT discovery"
 url: "https://github.com/ldb2000/lbc-veille"
 arch:
   - aarch64
-  - armv7
   - amd64
 init: false
 services:
