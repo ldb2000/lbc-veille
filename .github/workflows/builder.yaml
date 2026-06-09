@@ -18,21 +18,26 @@ jobs:
         arch: [aarch64, amd64]
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6.0.3
 
-      - name: Login to ghcr.io
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Read add-on version
+        id: meta
+        run: |
+          version=$(grep '^version:' lbc_veille/config.yaml | sed -E 's/version:[[:space:]]*"?([^"]+)"?/\1/')
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
 
       - name: Build & push ${{ matrix.arch }}
-        uses: home-assistant/builder@62a1597b84b3461abad9816d9cd92862a2b542c3  # 2026.03.2
+        uses: home-assistant/builder/actions/build-image@62a1597b84b3461abad9816d9cd92862a2b542c3  # 2026.03.2
         with:
-          args: >-
-            --${{ matrix.arch }}
-            --target /data/lbc_veille
-            --image "lbc-veille-${{ matrix.arch }}"
-            --docker-hub "ghcr.io/ldb2000"
-            --addon
+          arch: ${{ matrix.arch }}
+          image: ghcr.io/ldb2000/lbc-veille-${{ matrix.arch }}
+          image-tags: |
+            ${{ steps.meta.outputs.version }}
+            latest
+          version: ${{ steps.meta.outputs.version }}
+          context: lbc_veille
+          build-args: |
+            BUILD_FROM=ghcr.io/home-assistant/${{ matrix.arch }}-base-python:3.13-alpine3.21
+          push: "true"
+          cosign: "false"
+          container-registry-password: ${{ secrets.GITHUB_TOKEN }}
