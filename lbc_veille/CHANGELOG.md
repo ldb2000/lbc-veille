@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1
+
+- `pages` : plafond relevé de 10 à 50.
+
 ## 0.1.0
 
 - Version initiale : scrape motos LBC, stockage Supabase, compteurs MQTT discovery.

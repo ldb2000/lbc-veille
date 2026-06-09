@@ -1,5 +1,5 @@
 name: "LBC Veille Motos"
-version: "0.1.0"
+version: "0.1.1"
 slug: "lbc_veille"
 description: "Scrape LeBonCoin motos et publie des compteurs via MQTT discovery"
 url: "https://github.com/ldb2000/lbc-veille"
@@ -26,7 +26,7 @@ schema:
   supabase_service_key: "password"
   departements:
     - "int?"
-  pages: "int(1,10)"
+  pages: "int(1,50)"
   interval_hours: "int(1,168)"
   proxy_mode: "list(sans|ISP|residential)"
   brd_user: "str?"
